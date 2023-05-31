@@ -1,0 +1,23 @@
+version: "3.7"
+
+services:
+  dockerbot:
+    build:
+      context: .  
+    image: thiagogpa/botserver
+    container_name: botserver
+    network_mode: host
+    cap_add:
+       - NET_ADMIN
+    # privileged: true
+    restart: always
+    environment:
+      - REDIRECT_URI=${REDIRECT_URI}
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      - FILE_LOGGING_LEVEL=${FILE_LOGGING_LEVEL}
+      - CONSOLE_LOGGING_LEVEL=${CONSOLE_LOGGING_LEVEL}
+    volumes:
+      - ./user_credentials.json:/app/user_credentials.json
+      - /etc/localtime:/etc/localtime:ro       
+      - ./mylog.log:/app/mylog.log
+      - ./bkp:/app/bkp

@@ -1,0 +1,40 @@
+# Byte-compiled / optimized Python files
+__pycache__/
+*.py[cod]
+
+# # Python virtual environments
+# venv/
+# env/
+# ENV/
+
+# IDE-specific files
+.idea/
+.vscode/
+
+# Project-specific files and directories
+*.pyc
+*.bak
+*.swp
+*.log
+*.sqlite3
+
+# Dependency directories
+# Add any directories specific to your project's dependencies
+# For example, if you use pipenv, you can include the following line:
+# Pipenv virtualenvs
+# .venv/
+
+# Miscellaneous
+.DS_Store
+
+/bkp
+
+.env
+
+# Ignore all
+*.txt
+*.json
+
+# Exclude Notes.txt from being ignored
+!requirements.txt
+!Schedule_example.txt
