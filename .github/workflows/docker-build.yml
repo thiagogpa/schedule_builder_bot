@@ -3,7 +3,7 @@ name: Docker Build
 on:
   push:
     branches:
-      - main  # Adjust the branch name as per your needs
+      - main
 
 jobs:
   build:
@@ -18,6 +18,9 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/thiagogpa/schedule_builder_bot:latest
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:latest
+            ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:${{ github.sha }}
         env:
-          CR_PAT: ${{ secrets.GITHUB_TOKEN }}
+          CR_PAT: ${{ secrets.CR_PAT }}
+          DOCKER_AUTH_CONFIG: '{"auths":{"ghcr.io":{"username":"${{ github.repository_owner }}","password":"${{ secrets.CR_PAT }}"}}}'
