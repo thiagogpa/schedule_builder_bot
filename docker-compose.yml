@@ -16,6 +16,8 @@ services:
       - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
       - FILE_LOGGING_LEVEL=${FILE_LOGGING_LEVEL}
       - CONSOLE_LOGGING_LEVEL=${CONSOLE_LOGGING_LEVEL}
+      - BACKUP_FREQUENCY=${BACKUP_FREQUENCY}
+      - BACKUP_QUANTITY=${BACKUP_QUANTITY}
     volumes:
       - ./user_credentials.json:/app/user_credentials.json
       - /etc/localtime:/etc/localtime:ro       

@@ -6,6 +6,7 @@ import datetime
 import glob
 import time
 from logger import logger
+import environment
 
 def backup_json_file(json_file_path, backup_folder):
     backup_file_name = os.path.basename(json_file_path)
@@ -26,11 +27,12 @@ def cleanup_old_backups(backup_folder, num_backups_to_keep):
 def run_backup_periodically(json_file_path, backup_folder):
     backup_json_file(json_file_path, backup_folder)
     while True:
-        time.sleep(3600)  # Sleep for 1 hour
+        time.sleep(int(environment.BACKUP_FREQUENCY))
         backup_json_file(json_file_path, backup_folder)
-        cleanup_old_backups(backup_folder, 24)
+        cleanup_old_backups(backup_folder, int(environment.BACKUP_QUANTITY))
 
 def start_backup_thread(json_file_path, backup_folder):
+    logger.info(f"Backup settings: Frequency={environment.BACKUP_FREQUENCY} seconds, Quantity={environment.BACKUP_QUANTITY}")
     if not os.path.exists(backup_folder):
         os.makedirs(backup_folder)
     backup_thread = threading.Thread(target=run_backup_periodically, args=(json_file_path, backup_folder))
