@@ -35,9 +35,9 @@ flow = Flow.from_client_secrets_file(
 )
 
 
-def load_user(chat_id) -> TelegramUser:
+def load_user(chat_id,username) -> TelegramUser:
     user = TelegramUser()
-    user.load_user(chat_id)
+    user.load_user(chat_id,username)
     return user
 
 
@@ -86,10 +86,11 @@ def handle_message(msg):
 
     if content_type == "text":
         command = msg["text"]
+        username = msg["chat"]["username"]
         # logger.info("User sent message: {}".format(command))
-        logger.info(f"User {chat_id} sent message: {command}")
+        logger.info(f"User {username}/{chat_id} sent message: {command}")
 
-        user = load_user(chat_id)
+        user = load_user(chat_id,username)
         logger.debug(user.google_credential)
         if user:
             logger.debug("logged in")
