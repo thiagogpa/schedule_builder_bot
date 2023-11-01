@@ -16,4 +16,4 @@ COPY . .
 
 # Set the command to run the Python program
 # CMD [ "python", "bot.py" ]
-CMD ["gunicorn", "-b", ":5677", "--log-level", "debug", "--access-logfile", "-", "wsgi:app"]
+CMD ["gunicorn", "-b", ":43555", "--log-level", "debug", "--access-logfile", "-", "wsgi:app"]

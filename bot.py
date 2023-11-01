@@ -105,21 +105,17 @@ def handle_message(msg):
         logger.info(f"User {username}/{chat_id} sent message: {command}")
 
         user = fetch_user(chat_id, username, first_name, last_name)
+        
         logger.debug(user.google_credential)
-        if user:
-            logger.debug("logged in")
-        else:
-            logger.debug("Not logged in")
+        logger.debug("logged in" if user else "Not logged in")
 
         # Log user interactions
 
         logger.debug(f"previous_message = {previous_messages}")
 
-        # Check if the chat_id exists in the dictionary
-        if chat_id in previous_messages:
-            previous_message = previous_messages[chat_id]
-        else:
-            previous_message = None
+        # Gets previous message from chat id on dict, if none set it to NONE
+        previous_message = previous_messages.get(chat_id, None)
+
 
         logger.debug(f"previous_message = {previous_message}")
 
@@ -192,4 +188,4 @@ logger.info("Bot started.")
 
 # Run the Flask application
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5677)
+    app.run(host="0.0.0.0", port=43555)
