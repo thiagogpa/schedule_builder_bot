@@ -3,12 +3,14 @@ version: "3.7"
 services:
   dockerbot:
     build:
-      context: .  
+      context: .
     image: thiagogpa/schedule_builder_bot
     container_name: schedule_builder_bot
-    network_mode: host
-    cap_add:
-       - NET_ADMIN
+    ports:
+      - 5677:5677
+    # network_mode: host
+    # cap_add:
+    #    - NET_ADMIN
     # privileged: true
     restart: always
     environment:
@@ -20,6 +22,6 @@ services:
       - BACKUP_QUANTITY=${BACKUP_QUANTITY}
     volumes:
       - ./user_credentials.json:/app/user_credentials.json
-      - /etc/localtime:/etc/localtime:ro       
+      - /etc/localtime:/etc/localtime:ro
       - ./mylog.log:/app/mylog.log
       - ./bkp:/app/bkp

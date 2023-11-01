@@ -35,9 +35,10 @@ flow = Flow.from_client_secrets_file(
 )
 
 
-def load_user(chat_id,username) -> TelegramUser:
+def fetch_user(chat_id, username=None, first_name=None, last_name=None) -> TelegramUser:
+    logger.debug("fetch_user")
     user = TelegramUser()
-    user.load_user(chat_id,username)
+    user.load_user(chat_id, username, first_name, last_name)
     return user
 
 
@@ -59,7 +60,8 @@ def callback():
             text="You're validated successfully, I'll create a new calendar now",
         )
         if create_calendar(user):
-            bot.sendMessage(user.user_id, text="Your calendar has been created")
+            bot.sendMessage(
+                user.user_id, text="Your calendar has been created")
         return "Validated"
     else:
         bot.sendMessage(
@@ -67,12 +69,21 @@ def callback():
         )
         return "Valitation unsucessful"
 
+# Route for checking bot health
+
+
+@app.route('/health')
+def health_check():
+    logger.debug("/health")
+    return 'OK', 200
 
 # Route for accessing user's data
+
+
 @app.route("/user_data/<user_id>")
 def user_data(user_id):
     logger.debug("/user_data/<user_id>")
-    user = load_user(user_id)
+    user = fetch_user(user_id)
 
     list_calendars(user)
 
@@ -86,11 +97,14 @@ def handle_message(msg):
 
     if content_type == "text":
         command = msg["text"]
-        username = msg["chat"]["username"]
-        # logger.info("User sent message: {}".format(command))
+
+        username = msg["chat"].get("username", None)
+        first_name = msg["chat"].get("first_name", None)
+        last_name = msg["chat"].get("last_name", None)
+
         logger.info(f"User {username}/{chat_id} sent message: {command}")
 
-        user = load_user(chat_id,username)
+        user = fetch_user(chat_id, username, first_name, last_name)
         logger.debug(user.google_credential)
         if user:
             logger.debug("logged in")
@@ -142,19 +156,22 @@ def handle_message(msg):
             list_calendars(user)
 
         elif command == "/update_schedule":
-            bot.sendMessage(chat_id, text="Send me your schedule in the next message")
+            bot.sendMessage(
+                chat_id, text="Send me your schedule in the next message")
 
         elif command == "/delete_week_schedule":
-            bot.sendMessage(chat_id, "Deleting this week's schedule, give me a moment")
+            bot.sendMessage(
+                chat_id, "Deleting this week's schedule, give me a moment")
             delete_all_events(user)
 
         elif command == "/delete_next_week_schedule":
-            bot.sendMessage(chat_id, "Deleting next week's schedule, give me a moment")
+            bot.sendMessage(
+                chat_id, "Deleting next week's schedule, give me a moment")
             delete_all_events(user, True)
 
         elif command == "/donate":  # sends message#
             donate_command(chat_id)
-            
+
         elif command == "/help":  # sends message#
             help_command(chat_id)
         else:
@@ -165,6 +182,7 @@ def handle_message(msg):
         previous_messages[chat_id] = msg
         logger.debug(f"msg = {msg}")
         logger.debug(f"previous_message = {previous_messages}")
+
 
 start_backup_thread(environment.CREDENTIALS_FILE, "bkp")
 

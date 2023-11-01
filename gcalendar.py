@@ -47,7 +47,8 @@ def create_event(user: TelegramUser, schedule: Schedule):
 
 def create_schedule(user: TelegramUser, message):
     logger.debug(create_schedule)
-    bot.sendMessage(user.user_id, "I'm creating the schedule now, give me a moment")
+    bot.sendMessage(
+        user.user_id, "I'm creating the schedule now, give me a moment")
     entries = message.split("\n\n")
 
     schedules = []
@@ -63,7 +64,8 @@ def create_schedule(user: TelegramUser, message):
                     start_time_str, void, end_time_str, event_type_str = splitEntry[
                         i
                     ].split()
-                    event_type, event_name, event_id = splitEntry[i + 1].split()
+                    event_type, event_name, event_id = splitEntry[i + 1].split(
+                    )
                 except ValueError:
                     logger.debug("Could not parse event")
                     continue
@@ -106,10 +108,10 @@ def list_events(user: TelegramUser, next_week=None):
     else:
         start_date = datetime.now().date() - timedelta(days=datetime.now().weekday() + 1)
 
-    start_time = datetime.combine(start_date, time.min).isoformat() + "Z"    
+    start_time = datetime.combine(start_date, time.min).isoformat() + "Z"
     end_date = start_date + timedelta(days=6)
     end_time = datetime.combine(end_date, time.max).isoformat() + "Z"
-    
+
     logger.debug(f"start_time: {start_time} end_time: {end_time}")
 
     events_result = (
@@ -134,9 +136,15 @@ def list_events(user: TelegramUser, next_week=None):
         return events
 
 
-def delete_all_events(user: TelegramUser, next_week = None):
+def delete_all_events(user: TelegramUser, next_week=None):
+    logger.debug("delete_all_events")
     gcalendar_service = get_calendar_service(user.google_credential)
     events = list_events(user, next_week)
+
+    logger.debug(events)
+
+    if events == None:
+        bot.sendMessage(user.user_id, "No schedule was found")
 
     try:
         for event in events:
@@ -149,7 +157,7 @@ def delete_all_events(user: TelegramUser, next_week = None):
                 logger.debug("Failed to delete event")
 
             logger.debug("Event deleted")
-        
+
         bot.sendMessage(user.user_id, "This week's schedule has been deleted")
     except:
         pass

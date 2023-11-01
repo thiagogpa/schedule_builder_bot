@@ -11,15 +11,19 @@ class TelegramUser:
         self.google_credential = None
         self.calendar_id = None
         self.username = None
+        self.first_name = None
+        self.last_name = None
 
     def __bool__(self):
         return bool(self.google_credential)
 
-    def load_user(self, user_id, username):
+    def load_user(self, user_id=None,username=None,first_name=None,last_name=None):
         logger.debug("load_user")
         # Load existing user credentials from the JSON file
         self.user_id = user_id
         self.username = username
+        self.first_name = first_name
+        self.last_name = last_name
 
         users_json = load_all_user_credentials()
 
@@ -86,4 +90,6 @@ class TelegramUser:
             },
             "calendar_id": self.calendar_id,
             "username": self.username,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
         }
