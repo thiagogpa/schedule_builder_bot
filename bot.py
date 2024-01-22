@@ -102,7 +102,7 @@ def handle_message(msg):
         first_name = msg["chat"].get("first_name", None)
         last_name = msg["chat"].get("last_name", None)
 
-        logger.info(f"User {username}/{chat_id} sent message: {command}")
+        logger.info(f"User {first_name} {last_name}/{chat_id} sent message: {command}")
 
         user = fetch_user(chat_id, username, first_name, last_name)
         
