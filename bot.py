@@ -1,3 +1,29 @@
+"""
+Handles incoming messages from the Telegram bot and processes user commands.
+
+This function is the main entry point for handling messages received by the Telegram bot. It processes the incoming message, identifies the user, and dispatches the appropriate command handler based on the user's input.
+
+The function performs the following tasks:
+- Extracts the content type, chat type, and chat ID from the incoming message.
+- Retrieves the user's username, first name, and last name from the message.
+- Logs the user's interaction and the message content.
+- Fetches the user's information from the database.
+- Checks if the user is logged in and handles the appropriate command.
+- Supports the following commands:
+    - /start: Initiates the user authentication process.
+    - /list_events: Lists the user's calendar events.
+    - /create_calendar: Creates a new calendar for the user.
+    - /list_calendars: Lists the user's calendars.
+    - /update_schedule: Prompts the user to send their schedule for the next week.
+    - /delete_week_schedule: Deletes the current week's schedule.
+    - /delete_next_week_schedule: Deletes the next week's schedule.
+    - /donate: Displays a message about donating to the project.
+    - /help: Displays a help message.
+- Updates the previous message for the chat ID.
+
+Args:
+    msg (dict): The incoming message from the Telegram bot.
+"""
 from logger import logger
 import telepot
 from telepot.loop import MessageLoop
@@ -102,10 +128,11 @@ def handle_message(msg):
         first_name = msg["chat"].get("first_name", None)
         last_name = msg["chat"].get("last_name", None)
 
-        logger.info(f"User {first_name} {last_name}/{chat_id} sent message: {command}")
+        logger.info(
+            f"User {first_name} {last_name}/{chat_id} sent message: {command}")
 
         user = fetch_user(chat_id, username, first_name, last_name)
-        
+
         logger.debug(user.google_credential)
         logger.debug("logged in" if user else "Not logged in")
 
@@ -115,7 +142,6 @@ def handle_message(msg):
 
         # Gets previous message from chat id on dict, if none set it to NONE
         previous_message = previous_messages.get(chat_id, None)
-
 
         logger.debug(f"previous_message = {previous_message}")
 

@@ -1,3 +1,22 @@
+"""
+Provides functions for interacting with the Google Calendar API.
+
+The `get_calendar_service` function creates a Google Calendar API service client using the provided credentials.
+
+The `create_event` function creates a new event in the user's Google Calendar based on the provided `Schedule` object.
+
+The `create_schedule` function parses a message containing a schedule and creates events in the user's Google Calendar for each event in the schedule.
+
+The `list_events` function retrieves a list of events from the user's Google Calendar within a specified time range.
+
+The `delete_all_events` function deletes all events from the user's Google Calendar within a specified time range.
+
+The `print_calendars` function prints a list of the user's Google Calendars.
+
+The `list_calendars` function retrieves a list of the user's Google Calendars and calls `print_calendars` to display them.
+
+The `create_calendar` function creates a new Google Calendar for the user.
+"""
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -70,9 +89,12 @@ def create_schedule(user: TelegramUser, message):
                     logger.debug("Could not parse event")
                     continue
 
+                start_time, end_time = convert_to_iso(
+                    date, start_time_str, end_time_str)
+
                 schedule.add_event(
-                    start_time=convert_to_iso(date, start_time_str),
-                    end_time=convert_to_iso(date, end_time_str),
+                    start_time=start_time,
+                    end_time=end_time,
                     event_type=event_type,
                     event_name=event_name,
                     event_id=event_id,
