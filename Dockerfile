@@ -17,6 +17,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the Python files to the container
 COPY . .
 
+RUN mkdir -p /app/logs && touch /app/logs/app.log
+
 # Set the command to run the Python program
 # CMD [ "python", "bot.py" ]
 CMD ["gunicorn", "-b", ":43555", "--log-level", "debug", "--access-logfile", "-", "wsgi:app"]

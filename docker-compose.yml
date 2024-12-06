@@ -23,7 +23,7 @@ services:
     volumes:
       - ./user_credentials.json:/app/user_credentials.json
       - /etc/localtime:/etc/localtime:ro
-      - ./mylog.log:/app/mylog.log
+      - ./logs:/app/logs
       - ./bkp:/app/bkp
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:43555/health"]
